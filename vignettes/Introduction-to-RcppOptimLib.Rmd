@@ -1,0 +1,84 @@
+---
+title: "Introduction to RcppOptimLib"
+author: "Satyaprakash Nayak"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to RcppOptimLib}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(RcppOptimLib)
+```
+
+`RcppOptimLib` ships the header-only version of
+[OptimLib](https://github.com/kthohr/optim), a C++ library of local and
+global optimization algorithms built on Armadillo. There are two ways to
+use it.
+
+## 1. From R, via callbacks
+
+The demonstration wrappers accept plain R functions. BFGS on the
+Rosenbrock function, with an analytic gradient:
+
+```{r}
+rosenbrock    <- function(x) 100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
+rosenbrock_gr <- function(x) c(-400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
+                                200 * (x[2] - x[1]^2))
+optimlib_bfgs(rosenbrock, rosenbrock_gr, c(-1.2, 1))
+```
+
+Derivative-free Nelder–Mead needs no gradient:
+
+```{r}
+optimlib_nm(function(x) sum((x - 3)^2), c(0, 0))
+```
+
+Every objective evaluation crosses the R/C++ boundary, so for
+performance-critical work write the objective in C++ (below).
+
+## 2. From C++, via LinkingTo
+
+Add `LinkingTo: RcppOptimLib, Rcpp, RcppArmadillo` to your package, or
+compile a standalone file with `Rcpp::sourceCpp()`:
+
+```{Rcpp, eval = FALSE}
+// [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]
+#include <RcppOptimLib.h>
+
+double sphere_fn(const arma::vec& x, arma::vec* grad_out, void*) {
+    if (grad_out) *grad_out = 2.0 * x;
+    return arma::dot(x, x);
+}
+
+// [[Rcpp::export]]
+Rcpp::List minimize_sphere(arma::vec x0) {
+    optim::algo_settings_t settings;
+    bool ok = optim::bfgs(x0, sphere_fn, nullptr, settings);
+    return Rcpp::List::create(
+        Rcpp::Named("par") = Rcpp::NumericVector(x0.begin(), x0.end()),
+        Rcpp::Named("value") = settings.opt_fn_value,
+        Rcpp::Named("success") = ok);
+}
+```
+
+The `optim_sphere_bfgs()` and `optim_ackley_de()` exports in this
+package are compiled examples of exactly this pattern — see
+`src/examples.cpp`. Differential evolution on the multimodal Ackley
+function, with box bounds and a reproducible seed:
+
+```{r}
+optim_ackley_de(c(2, -2), seed = 42L)
+```
+
+## Notes
+
+* `#include <RcppOptimLib.h>` sets `OPTIM_USE_RCPP_ARMADILLO` for you;
+  never include OptimLib's `optim.hpp` directly.
+* OpenMP is disabled by default because R callbacks must not run on
+  worker threads; see `IMPLEMENTATION.md` in the package sources before
+  opting back in for pure C++ objectives.
+* OptimLib uses its own RNG (`std::mt19937_64`), so `set.seed()` has no
+  effect on stochastic algorithms — pass a seed explicitly.

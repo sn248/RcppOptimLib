@@ -1,0 +1,9 @@
+## OptimLib requires C++11 or later; CXX17 matches the current R default
+## and the Rcppautodiff setup.
+CXX_STD = CXX17
+
+## Headers ship in inst/include so that client packages can use
+## 'LinkingTo: RcppOptimLib'. The OPTIM_USE_RCPP_ARMADILLO and OpenMP
+## policy defines live in inst/include/RcppOptimLib.h, not here, so that
+## client packages inherit them automatically.
+PKG_CPPFLAGS = -I../inst/include/

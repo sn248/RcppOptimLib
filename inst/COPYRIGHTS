@@ -1,0 +1,22 @@
+RcppOptimLib bundles the header-only version (generated upstream via
+./configure --header-only-version) of the following libraries in
+inst/include/, with two mechanical modifications required for use
+inside R (documented in IMPLEMENTATION.md in the source repository):
+index-vector typedefs changed to arma::uword, and console output
+(std::cout / printf) routed through Rcpp::Rcout / Rprintf per CRAN
+policy:
+
+  - OptimLib      (https://github.com/kthohr/optim)
+  - BaseMatrixOps (https://github.com/kthohr/BaseMatrixOps),
+    a submodule of OptimLib, in inst/include/BaseMatrixOps/
+
+Both are Copyright (c) 2016-2023 Keith O'Hara and distributed under the
+Apache License, Version 2.0. See inst/include/optimlib-LICENSE and
+inst/include/optimlib-NOTICE.txt for the full license text and notices.
+
+OptimLib's headers use include paths relative to the library root
+(e.g. "misc/optim_structs.hpp"), which is why they sit directly in
+inst/include/ rather than in a subdirectory.
+
+All other files in this package are Copyright (c) 2026 Satyaprakash
+Nayak and distributed under GPL (>= 2).

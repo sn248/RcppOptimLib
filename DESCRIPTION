@@ -1,0 +1,39 @@
+Package: RcppOptimLib
+Type: Package
+Title: An Interface to the C++ Numerical Optimization Library 'OptimLib'
+Version: 0.0.1
+Date: 2026-08-24
+Authors@R: c(person(given = "Satyaprakash", family = "Nayak",
+                    role = c("aut", "cre"), email = "satyaprakash.nayak@gmail.com",
+                    comment = c(ORCID = "0000-0001-7225-1317")),
+             person(given = "Keith", family = "O'Hara",
+                    role = c("aut", "cph"),
+                    comment = "Author of the OptimLib C++ library"))
+Maintainer: Satyaprakash Nayak <satyaprakash.nayak@gmail.com>
+URL: https://github.com/sn248/RcppOptimLib
+BugReports: https://github.com/sn248/RcppOptimLib/issues
+Description: Provides an interface from R to 'OptimLib'
+    <https://optimlib.readthedocs.io/>, a lightweight header-only C++
+    library of numerical optimization methods for nonlinear functions,
+    including BFGS, L-BFGS, conjugate gradient, gradient descent,
+    Nelder-Mead, differential evolution and particle swarm optimization,
+    built on the 'Armadillo' linear algebra library. The 'OptimLib' header
+    files (generated in header-only mode) are shipped with this package so
+    that other R packages can use them by including 'RcppOptimLib' in the
+    'LinkingTo' field of their 'DESCRIPTION' file. Example programs
+    demonstrate minimizing C++ objective functions as well as plain R
+    functions via callbacks, using 'Rcpp' and 'RcppArmadillo'.
+License: GPL (>= 2)
+Copyright: See the file COPYRIGHTS in the inst directory: the bundled
+    'OptimLib' and 'BaseMatrixOps' headers are copyright Keith O'Hara,
+    released under the Apache License 2.0.
+Suggests:
+    knitr,
+    rmarkdown,
+    tinytest
+Encoding: UTF-8
+Imports: Rcpp (>= 1.0.8.3)
+LinkingTo: Rcpp, RcppArmadillo
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0
