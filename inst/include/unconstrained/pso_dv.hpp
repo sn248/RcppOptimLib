@@ -285,7 +285,10 @@ internal::pso_dv_impl(
             if (stag_vec(i) >= stag_limit) {
                 bmo::stats::internal::runif_vec_inplace<fp_t>(n_vals, rand_engines_vec[thread_num], rand_vec);
 
-                P.row(i) = P_min + BMO_MATOPS_HADAMARD_PROD(rand_vec, (P_max - P_min));
+                // RcppOptimLib patch: rand_vec is a column vector and
+                // P_max - P_min a row vector; upstream's Hadamard product
+                // had mismatched dimensions and threw at runtime.
+                P.row(i) = P_min + BMO_MATOPS_HADAMARD_PROD(BMO_MATOPS_TRANSPOSE(rand_vec), (P_max - P_min));
                 stag_vec(i) = 0;
 
                 objfn_vals(i) = box_objfn( BMO_MATOPS_TRANSPOSE(P.row(i)), nullptr, opt_data);

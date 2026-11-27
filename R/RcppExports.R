@@ -32,41 +32,15 @@ optim_ackley_de <- function(x0, seed = 1L) {
     .Call(`_RcppOptimLib_optim_ackley_de`, x0, seed)
 }
 
-#' Minimize an R function with BFGS via callbacks
-#'
-#' The objective and gradient are plain R functions, called from C++ on
-#' every evaluation. Convenient, but the callback overhead makes this
-#' slower than a C++ objective; for performance-critical work write the
-#' objective in C++ against the OptimLib headers (see the vignette).
-#'
-#' @param fn R function taking a numeric vector, returning a scalar.
-#' @param gr R function taking a numeric vector, returning the gradient
-#'   vector.
-#' @param x0 Numeric vector of starting values.
-#' @return A list with elements `par`, `value`, `iterations` and `success`.
-#' @examples
-#' rosenbrock <- function(x) 100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
-#' rosenbrock_gr <- function(x) c(
-#'   -400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
-#'    200 * (x[2] - x[1]^2))
-#' optimlib_bfgs(rosenbrock, rosenbrock_gr, c(-1.2, 1))
-#' @export
-optimlib_bfgs <- function(fn, gr, x0) {
-    .Call(`_RcppOptimLib_optimlib_bfgs`, fn, gr, x0)
+.optimlib_min <- function(method, par, fn, gr, hess, lower, upper, control) {
+    .Call(`_RcppOptimLib_optimlib_min_cpp`, method, par, fn, gr, hess, lower, upper, control)
 }
 
-#' Minimize an R function with Nelder-Mead via callbacks
-#'
-#' Derivative-free minimization of a plain R function, so no gradient
-#' function is needed. Same callback-overhead caveat as [optimlib_bfgs()].
-#'
-#' @param fn R function taking a numeric vector, returning a scalar.
-#' @param x0 Numeric vector of starting values.
-#' @return A list with elements `par`, `value`, `iterations` and `success`.
-#' @examples
-#' optimlib_nm(function(x) sum((x - 3)^2), c(0, 0))
-#' @export
-optimlib_nm <- function(fn, x0) {
-    .Call(`_RcppOptimLib_optimlib_nm`, fn, x0)
+.optimlib_sumt <- function(par, fn, gr, constr, constr_jac, n_constr, control) {
+    .Call(`_RcppOptimLib_optimlib_sumt_cpp`, par, fn, gr, constr, constr_jac, n_constr, control)
+}
+
+.optimlib_root <- function(method, par, fn, jac, control) {
+    .Call(`_RcppOptimLib_optimlib_root_cpp`, method, par, fn, jac, control)
 }
 

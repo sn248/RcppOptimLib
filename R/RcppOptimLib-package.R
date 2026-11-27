@@ -17,10 +17,11 @@
 #'    `// [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]` in a
 #'    `sourceCpp()` file), then `#include <RcppOptimLib.h>` and call the
 #'    `optim::` routines directly on Armadillo vectors.
-#' 2. **From R:** call the demonstration wrappers such as
-#'    [optim_sphere_bfgs()], [optim_ackley_de()], [optimlib_bfgs()] and
-#'    [optimlib_nm()]. The latter two accept plain R functions as
-#'    objectives via callbacks.
+#' 2. **From R:** [optimlib()] minimizes plain R functions with any
+#'    OptimLib algorithm, [optimlib_sumt()] adds nonlinear inequality
+#'    constraints and [optimlib_root()] solves systems of equations; tune
+#'    them with [optimlib_control()]. [optim_sphere_bfgs()] and
+#'    [optim_ackley_de()] demonstrate objectives written in C++.
 #'
 #' @useDynLib RcppOptimLib, .registration = TRUE
 #' @importFrom Rcpp sourceCpp

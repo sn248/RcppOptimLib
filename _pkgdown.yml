@@ -8,7 +8,14 @@ reference:
   - RcppOptimLib-package
 - title: Optimizing R functions
   desc: >
-    Wrappers that minimize plain R functions via callbacks into OptimLib.
+    Minimize, constrain or solve plain R functions with any OptimLib
+    algorithm.
+  contents:
+  - optimlib
+  - optimlib_sumt
+  - optimlib_root
+  - optimlib_control
+- title: Shortcuts
   contents:
   - optimlib_bfgs
   - optimlib_nm

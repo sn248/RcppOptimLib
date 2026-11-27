@@ -57,6 +57,28 @@ objectives; BFGS and Nelder–Mead with R-function callbacks).
      print paths are disabled at runtime. Also pruned:
      `BaseMatrixOps/.git`, `.github/` and `tests/` (hidden-file NOTE
      and a GNU-Makefile WARNING in check).
+   - Upstream bug fixes (0.0.2; each marked `RcppOptimLib patch` in the
+     source, all present on upstream master as of 2026-11 and worth
+     reporting/PRing):
+     - `unconstrained/lbfgs.hpp`: `x` was not advanced to `x_p` after the
+       first line search, so the first in-loop curvature pair used an `s`
+       spanning two steps against a one-step `y`; L-BFGS stalled after 2
+       iterations on Rosenbrock. The first-step `grad_err` also used the
+       initial gradient instead of `grad_p`.
+     - `unconstrained/pso_dv.hpp`: the stagnation-reset Hadamard product
+       mixed a column vector (`rand_vec`) with a row vector
+       (`P_max - P_min`); Armadillo throws at runtime.
+     - `constrained/sumt.hpp`: penalty gradient was
+       `c * colSums(J)` instead of `c * t(J) %*% g`, inconsistent with the
+       penalized objective; BFGS stalled once the penalty grew
+       (x + y <= 2 test stopped at 1.00046 instead of 1).
+
+   Known upstream behaviours *not* patched, handled on the R side:
+   `de_prmm` halves the population three times (hard-coded) and indexes
+   with unsigned arithmetic, so `n_pop %/% 8 <= n_pop_best` reads out of
+   bounds — `optimlib()` validates this. With `check_freq = Inf`, `de`
+   reports success after `n_gen` generations but `de_prmm`/`pso`/`pso_dv`
+   report failure — documented in `?optimlib`.
 
 5. **Licensing.** The package is GPL (>= 3) (Apache-2.0 is
    compatible with GPL-3 but not GPL-2); the bundled OptimLib and

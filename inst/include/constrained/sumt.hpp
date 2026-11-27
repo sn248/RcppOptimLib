@@ -171,7 +171,11 @@ internal::sumt_impl(
             ret = opt_objfn(vals_inp,&grad_obj,opt_data) + c_pen*(constr_valsq / 2.0);
 
             if (grad_out) {
-                *grad_out = grad_obj + c_pen * BMO_MATOPS_TRANSPOSE( BMO_MATOPS_COLWISE_SUM(jacob_constr) );
+                // RcppOptimLib patch: the gradient of c/2 * sum(g^2) is
+                // c * J' g. Upstream used c * colSums(J), dropping g, so the
+                // gradient did not match the penalized objective and BFGS
+                // stalled once the penalty grew.
+                *grad_out = grad_obj + c_pen * BMO_MATOPS_TRANSPOSE(jacob_constr) * constr_vals;
             }
         } else {
             ret = opt_objfn(vals_inp, &grad_obj, opt_data);
