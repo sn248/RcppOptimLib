@@ -51,6 +51,6 @@ roadmap.
 
 ## License
 
-RcppOptimLib is GPL (>= 2). The bundled OptimLib and BaseMatrixOps
+RcppOptimLib is GPL (>= 3). The bundled OptimLib and BaseMatrixOps
 headers are Copyright Keith O'Hara, Apache License 2.0 — see
 `inst/COPYRIGHTS`.

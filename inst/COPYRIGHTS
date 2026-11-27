@@ -19,4 +19,6 @@ OptimLib's headers use include paths relative to the library root
 inst/include/ rather than in a subdirectory.
 
 All other files in this package are Copyright (c) 2026 Satyaprakash
-Nayak and distributed under GPL (>= 2).
+Nayak and distributed under GPL (>= 3). GPL version 3 or later is
+required because the Apache License 2.0 is compatible with GPL-3 but
+not with GPL-2.

@@ -39,7 +39,8 @@ submitting.)
 released under the Apache License 2.0. Keith O'Hara is credited in
 `Authors@R` as author and copyright holder (`aut`, `cph`); the licensing
 is recorded in `inst/COPYRIGHTS`, `inst/include/optimlib-LICENSE` and
-`inst/include/optimlib-NOTICE.txt`. The package itself is GPL (>= 2).
+`inst/include/optimlib-NOTICE.txt`. The package itself is GPL (>= 3),
+since the Apache License 2.0 is compatible with GPL-3 but not GPL-2.
 
 Two mechanical modifications were applied to the vendored headers for use
 inside R, documented in `IMPLEMENTATION.md`:

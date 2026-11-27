@@ -23,7 +23,7 @@ Description: Provides an interface from R to 'OptimLib'
     'LinkingTo' field of their 'DESCRIPTION' file. Example programs
     demonstrate minimizing C++ objective functions as well as plain R
     functions via callbacks, using 'Rcpp' and 'RcppArmadillo'.
-License: GPL (>= 2)
+License: GPL (>= 3)
 Copyright: See the file COPYRIGHTS in the inst directory: the bundled
     'OptimLib' and 'BaseMatrixOps' headers are copyright Keith O'Hara,
     released under the Apache License 2.0.

@@ -1,5 +1,0 @@
-## NOTE: upstream OptimLib states Windows is unsupported; it does compile
-## with Rtools' gcc in header-only mode, but verify on win-builder before
-## any CRAN submission (see IMPLEMENTATION.md, phase 4).
-CXX_STD = CXX17
-PKG_CPPFLAGS = -I../inst/include/

@@ -58,7 +58,8 @@ objectives; BFGS and Nelder–Mead with R-function callbacks).
      `BaseMatrixOps/.git`, `.github/` and `tests/` (hidden-file NOTE
      and a GNU-Makefile WARNING in check).
 
-5. **Licensing.** The package is GPL (>= 2); the bundled OptimLib and
+5. **Licensing.** The package is GPL (>= 3) (Apache-2.0 is
+   compatible with GPL-3 but not GPL-2); the bundled OptimLib and
    BaseMatrixOps headers are Apache-2.0, Copyright Keith O'Hara, who is
    listed in `Authors@R` as `aut, cph`. See `inst/COPYRIGHTS`,
    `inst/include/optimlib-LICENSE` and `inst/include/optimlib-NOTICE.txt`.
@@ -91,8 +92,9 @@ rm -rf BaseMatrixOps/.git BaseMatrixOps/.github BaseMatrixOps/tests
 
 - [x] Vendor header-only OptimLib + BaseMatrixOps into `inst/include/`
 - [x] `RcppOptimLib.h` wrapper header with the RcppArmadillo/OpenMP defines
-- [x] `src/Makevars` / `Makevars.win`: `CXX_STD = CXX17`,
-      `PKG_CPPFLAGS = -I../inst/include/`
+- [x] `src/Makevars`: `CXX_STD = CXX17`,
+      `PKG_CPPFLAGS = -I../inst/include/` (also used on Windows; no
+      separate `Makevars.win` needed)
 - [x] Demo exports with C++ objectives: `optim_sphere_bfgs()` (BFGS,
       analytic gradient), `optim_ackley_de()` (differential evolution,
       box bounds, seeded RNG)
