@@ -14,13 +14,13 @@ Source:
 [`DESCRIPTION`](https://github.com/sn248/RcppOptimLib/blob/main/DESCRIPTION)
 
 Nayak S, O'Hara K (2026). *RcppOptimLib: An Interface to the C++
-Numerical Optimization Library 'OptimLib'*. R package version 0.0.1,
-<https://github.com/sn248/RcppOptimLib>.
+Numerical Optimization Library 'OptimLib'*. R package version
+0.0.1.9000, <https://github.com/sn248/RcppOptimLib>.
 
     @Manual{,
       title = {RcppOptimLib: An Interface to the C++ Numerical Optimization Library 'OptimLib'},
       author = {Satyaprakash Nayak and Keith O'Hara},
       year = {2026},
-      note = {R package version 0.0.1},
+      note = {R package version 0.0.1.9000},
       url = {https://github.com/sn248/RcppOptimLib},
     }

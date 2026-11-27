@@ -1,8 +1,9 @@
-# Minimize an R function with Nelder-Mead via callbacks
+# Minimize an R function with Nelder-Mead
 
-Derivative-free minimization of a plain R function, so no gradient
-function is needed. Same callback-overhead caveat as
-[`optimlib_bfgs()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_bfgs.md).
+Shortcut for `optimlib(x0, fn, method = "nm")`, kept for compatibility
+with version 0.0.1. Use
+[`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
+for other methods, bounds and control settings.
 
 ## Usage
 
@@ -22,7 +23,8 @@ optimlib_nm(fn, x0)
 
 ## Value
 
-A list with elements `par`, `value`, `iterations` and `success`.
+See
+[`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md).
 
 ## Examples
 
@@ -34,10 +36,16 @@ optimlib_nm(function(x) sum((x - 3)^2), c(0, 0))
 #> $value
 #> [1] 2.481919e-15
 #> 
+#> $success
+#> [1] TRUE
+#> 
 #> $iterations
 #> [1] 66
 #> 
-#> $success
-#> [1] TRUE
+#> $error
+#> [1] 2.022608e-09
+#> 
+#> $method
+#> [1] "nm"
 #> 
 ```

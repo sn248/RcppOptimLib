@@ -58,6 +58,31 @@ objectives; BFGS and Nelder–Mead with R-function callbacks).
       print paths are disabled at runtime. Also pruned:
       `BaseMatrixOps/.git`, `.github/` and `tests/` (hidden-file NOTE
       and a GNU-Makefile WARNING in check).
+    - Upstream bug fixes (0.0.2; each marked `RcppOptimLib patch` in the
+      source, all present on upstream master as of 2026-11 and worth
+      reporting/PRing):
+      - `unconstrained/lbfgs.hpp`: `x` was not advanced to `x_p` after
+        the first line search, so the first in-loop curvature pair used
+        an `s` spanning two steps against a one-step `y`; L-BFGS stalled
+        after 2 iterations on Rosenbrock. The first-step `grad_err` also
+        used the initial gradient instead of `grad_p`.
+      - `unconstrained/pso_dv.hpp`: the stagnation-reset Hadamard
+        product mixed a column vector (`rand_vec`) with a row vector
+        (`P_max - P_min`); Armadillo throws at runtime.
+      - `constrained/sumt.hpp`: penalty gradient was `c * colSums(J)`
+        instead of `c * t(J) %*% g`, inconsistent with the penalized
+        objective; BFGS stalled once the penalty grew (x + y \<= 2 test
+        stopped at 1.00046 instead of 1).
+
+    Known upstream behaviours *not* patched, handled on the R side:
+    `de_prmm` halves the population three times (hard-coded) and indexes
+    with unsigned arithmetic, so `n_pop %/% 8 <= n_pop_best` reads out
+    of bounds —
+    [`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
+    validates this. With `check_freq = Inf`, `de` reports success after
+    `n_gen` generations but `de_prmm`/`pso`/`pso_dv` report failure —
+    documented in
+    [`?optimlib`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md).
 
 5.  **Licensing.** The package is GPL (\>= 3) (Apache-2.0 is compatible
     with GPL-3 but not GPL-2); the bundled OptimLib and BaseMatrixOps
@@ -122,14 +147,17 @@ contract — add it as a test, e.g. skipped on CRAN)
 
 ## Phase 2 — a real R-level interface
 
-Goal: one `optimlib()` front end resembling
+Goal: one
+[`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
+front end resembling
 [`stats::optim()`](https://rdrr.io/r/stats/optim.html):
 
 `optimlib(par, fn, gr = NULL, method = c("bfgs","lbfgs","cg","gd", "nm","de","pso"), lower = NULL, upper = NULL, control = list())`
 
 Map `control` onto `optim::algo_settings_t` (iter_max, grad_err_tol,
 rel_sol_change_tol, per-algorithm sub-settings such as
-`de_settings.n_pop`); document defaults in `?optimlib`
+`de_settings.n_pop`); document defaults in
+[`?optimlib`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
 
 When `gr` is NULL for gradient-based methods, fall back to OptimLib’s
 numerical gradient or refuse with a clear error — decide and document
@@ -153,7 +181,9 @@ Vignette 1: using OptimLib from `sourceCpp()`/own package via LinkingTo
 (the fast path), including passing data through `opt_data` and a
 benchmark against the R-callback path
 
-Vignette 2: the R-level `optimlib()` interface, comparison with
+Vignette 2: the R-level
+[`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
+interface, comparison with
 [`stats::optim()`](https://rdrr.io/r/stats/optim.html) and `optimx` on
 standard test problems
 

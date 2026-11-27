@@ -17,7 +17,7 @@ particle swarm, and root finding) from C++ code via 'Rcpp' and
 
     <a class="navbar-brand me-2" href="../index.html">RcppOptimLib</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,7 @@ particle swarm, and root finding) from C++ code via 'Rcpp' and
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Introduction-to-RcppOptimLib.html">Introduction to RcppOptimLib</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sn248/RcppOptimLib/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -64,10 +65,11 @@ particle swarm, and root finding) from C++ code via 'Rcpp' and
 <code>// [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]</code> in a
 <code>sourceCpp()</code> file), then <code>#include &lt;RcppOptimLib.h&gt;</code> and call the
 <code>optim::</code> routines directly on Armadillo vectors.</p></li>
-<li><p><strong>From R:</strong> call the demonstration wrappers such as
-<code><a href="optim_sphere_bfgs.html">optim_sphere_bfgs()</a></code>, <code><a href="optim_ackley_de.html">optim_ackley_de()</a></code>, <code><a href="optimlib_bfgs.html">optimlib_bfgs()</a></code> and
-<code><a href="optimlib_nm.html">optimlib_nm()</a></code>. The latter two accept plain R functions as
-objectives via callbacks.</p></li>
+<li><p><strong>From R:</strong> <code><a href="optimlib.html">optimlib()</a></code> minimizes plain R functions with any
+OptimLib algorithm, <code><a href="optimlib_sumt.html">optimlib_sumt()</a></code> adds nonlinear inequality
+constraints and <code><a href="optimlib_root.html">optimlib_root()</a></code> solves systems of equations; tune
+them with <code><a href="optimlib_control.html">optimlib_control()</a></code>. <code><a href="optim_sphere_bfgs.html">optim_sphere_bfgs()</a></code> and
+<code><a href="optim_ackley_de.html">optim_ackley_de()</a></code> demonstrate objectives written in C++.</p></li>
 </ol></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

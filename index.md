@@ -35,20 +35,32 @@ arma::vec minimize_sphere(arma::vec x0) {
 }
 ```
 
-From R, demonstration wrappers are available, including callback-based
-minimization of plain R functions:
+From R, every algorithm is available on plain R functions through an
+[`optim()`](https://rdrr.io/r/stats/optim.html)-like interface:
 
 ``` r
 
 rosenbrock    <- function(x) 100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
 rosenbrock_gr <- function(x) c(-400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
                                 200 * (x[2] - x[1]^2))
-optimlib_bfgs(rosenbrock, rosenbrock_gr, c(-1.2, 1))
-#> $par [1] 1 1   $value ~0   $success TRUE
 
-optimlib_nm(function(x) sum((x - 3)^2), c(0, 0))   # derivative-free
-optim_ackley_de(c(2, -2), seed = 42L)              # global, C++ objective
+optimlib(c(-1.2, 1), rosenbrock, rosenbrock_gr)                  # BFGS
+optimlib(c(-1.2, 1), rosenbrock, method = "lbfgs",               # numeric gradient
+         control = list(lbfgs = list(par_M = 5)))
+optimlib(c(0.5, 0.5), rosenbrock, method = "nm",                 # box constraints
+         lower = 0, upper = 0.8)
+
+set.seed(1)                                                       # global search
+optimlib(c(2, 2), rosenbrock, method = "pso", lower = -5, upper = 5)
+
+optimlib_sumt(c(0, 0), function(x) sum((x - 2)^2),                # x1 + x2 <= 2
+              constr = function(x) x[1] + x[2] - 2)
+optimlib_root(c(1.2, 1.3), function(x) c(sum(x^2) - 4, x[1] - x[2]))
 ```
+
+See
+[`?optimlib_control`](https://sn248.github.io/RcppOptimLib/reference/optimlib_control.md)
+for the convergence and algorithm-specific settings.
 
 See `IMPLEMENTATION.md` for the design decisions and the development
 roadmap.

@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RcppOptimLib</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
 <li><a class="dropdown-item" href="../articles/Introduction-to-RcppOptimLib.html">Introduction to RcppOptimLib</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -71,38 +72,63 @@ two ways to use it.</p>
 <div class="section level2">
 <h2 id="from-r-via-callbacks">1. From R, via callbacks<a class="anchor" aria-label="anchor" href="#from-r-via-callbacks"></a>
 </h2>
-<p>The demonstration wrappers accept plain R functions. BFGS on the
-Rosenbrock function, with an analytic gradient:</p>
+<p><code><a href="../reference/optimlib.html">optimlib()</a></code> minimizes a plain R function with any
+OptimLib algorithm, with an interface modelled on <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">optim()</a></code>.
+BFGS on the Rosenbrock function, with an analytic gradient:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rosenbrock</span>    <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
 <span><span class="va">rosenbrock_gr</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">400</span> <span class="op">*</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>                                <span class="fl">200</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/optimlib_bfgs.html">optimlib_bfgs</a></span><span class="op">(</span><span class="va">rosenbrock</span>, <span class="va">rosenbrock_gr</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/optimlib.html">optimlib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.2</span>, <span class="fl">1</span><span class="op">)</span>, <span class="va">rosenbrock</span>, <span class="va">rosenbrock_gr</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $par</span></span>
 <span><span class="co">#&gt; [1] 1 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $value</span></span>
 <span><span class="co">#&gt; [1] 2.233623e-18</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $success</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $iterations</span></span>
 <span><span class="co">#&gt; [1] 31</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $success</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>Derivative-free Nelder–Mead needs no gradient:</p>
+<span><span class="co">#&gt; $error</span></span>
+<span><span class="co">#&gt; [1] 4.734761e-09</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $method</span></span>
+<span><span class="co">#&gt; [1] "bfgs"</span></span></code></pre></div>
+<p>Choose the algorithm with <code>method</code>. Gradient-based methods
+fall back to finite differences when <code>gr</code> is omitted;
+Nelder–Mead, differential evolution and particle swarm need no gradient
+at all:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/optimlib_nm.html">optimlib_nm</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="fl">3</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $par</span></span>
-<span><span class="co">#&gt; [1] 3 3</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $value</span></span>
-<span><span class="co">#&gt; [1] 2.481919e-15</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $iterations</span></span>
-<span><span class="co">#&gt; [1] 66</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $success</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lbfgs"</span>, <span class="st">"cg"</span>, <span class="st">"nm"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="../reference/optimlib.html">optimlib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.2</span>, <span class="fl">1</span><span class="op">)</span>, <span class="va">rosenbrock</span>, method <span class="op">=</span> <span class="va">m</span><span class="op">)</span><span class="op">$</span><span class="va">par</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      lbfgs cg nm</span></span>
+<span><span class="co">#&gt; [1,]     1  1  1</span></span>
+<span><span class="co">#&gt; [2,]     1  1  1</span></span></code></pre></div>
+<p>Bounds are given with <code>lower</code> and <code>upper</code>. The
+population methods use R’s random number generator for their seed, so
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> makes them reproducible:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3016</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/optimlib.html">optimlib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="va">rosenbrock</span>, method <span class="op">=</span> <span class="st">"de"</span>, lower <span class="op">=</span> <span class="op">-</span><span class="fl">5</span>, upper <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>         control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>de <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>n_gen <span class="op">=</span> <span class="fl">300</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">par</span></span>
+<span><span class="co">#&gt; [1] 1 1</span></span></code></pre></div>
+<p><code>control</code> takes general settings (<code>iter_max</code>,
+tolerances, <code>print_level</code>) and per-algorithm lists such as
+<code>lbfgs = list(par_M = 20)</code> or
+<code>gd = list(method = "adam")</code>; see
+<code><a href="../reference/optimlib_control.html">?optimlib_control</a></code>. Nonlinear inequality constraints
+<code>g(x) &lt;= 0</code> are handled by <code><a href="../reference/optimlib_sumt.html">optimlib_sumt()</a></code>,
+and systems of equations by <code><a href="../reference/optimlib_root.html">optimlib_root()</a></code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/optimlib_sumt.html">optimlib_sumt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>              constr <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">par</span></span>
+<span><span class="co">#&gt; [1] 0.7071068 0.7071068</span></span>
+<span><span class="fu"><a href="../reference/optimlib_root.html">optimlib_root</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.2</span>, <span class="fl">1.3</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">4</span>, <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">par</span></span>
+<span><span class="co">#&gt; [1] 1.414214 1.414214</span></span></code></pre></div>
 <p>Every objective evaluation crosses the R/C++ boundary, so for
 performance-critical work write the objective in C++ (below).</p>
 </div>
@@ -115,29 +141,29 @@ to its <code>src/Makevars</code> (Armadillo needs BLAS/LAPACK; the link
 fails on Windows without it), or compile a standalone file with
 <code><a href="https://rdrr.io/pkg/Rcpp/man/sourceCpp.html" class="external-link">Rcpp::sourceCpp()</a></code>, where the <code>RcppArmadillo</code>
 plugin adds these libraries for you:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">// [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;RcppOptimLib.h&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="dt">double</span> sphere_fn<span class="op">(</span><span class="at">const</span> arma<span class="op">::</span>vec<span class="op">&amp;</span> x<span class="op">,</span> arma<span class="op">::</span>vec<span class="op">*</span> grad_out<span class="op">,</span> <span class="dt">void</span><span class="op">*)</span> <span class="op">{</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>grad_out<span class="op">)</span> <span class="op">*</span>grad_out <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> x<span class="op">;</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="cf">return</span> arma<span class="op">::</span>dot<span class="op">(</span>x<span class="op">,</span> x<span class="op">);</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">// [[Rcpp::export]]</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>Rcpp<span class="op">::</span>List minimize_sphere<span class="op">(</span>arma<span class="op">::</span>vec x0<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>    optim<span class="op">::</span><span class="dt">algo_settings_t</span> settings<span class="op">;</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>    <span class="dt">bool</span> ok <span class="op">=</span> optim<span class="op">::</span>bfgs<span class="op">(</span>x0<span class="op">,</span> sphere_fn<span class="op">,</span> <span class="kw">nullptr</span><span class="op">,</span> settings<span class="op">);</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>    <span class="cf">return</span> Rcpp<span class="op">::</span>List<span class="op">::</span>create<span class="op">(</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>        Rcpp<span class="op">::</span>Named<span class="op">(</span><span class="st">"par"</span><span class="op">)</span> <span class="op">=</span> Rcpp<span class="op">::</span>NumericVector<span class="op">(</span>x0<span class="op">.</span>begin<span class="op">(),</span> x0<span class="op">.</span>end<span class="op">()),</span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>        Rcpp<span class="op">::</span>Named<span class="op">(</span><span class="st">"value"</span><span class="op">)</span> <span class="op">=</span> settings<span class="op">.</span>opt_fn_value<span class="op">,</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>        Rcpp<span class="op">::</span>Named<span class="op">(</span><span class="st">"success"</span><span class="op">)</span> <span class="op">=</span> ok<span class="op">);</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co">// [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;RcppOptimLib.h&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="dt">double</span> sphere_fn<span class="op">(</span><span class="at">const</span> arma<span class="op">::</span>vec<span class="op">&amp;</span> x<span class="op">,</span> arma<span class="op">::</span>vec<span class="op">*</span> grad_out<span class="op">,</span> <span class="dt">void</span><span class="op">*)</span> <span class="op">{</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>grad_out<span class="op">)</span> <span class="op">*</span>grad_out <span class="op">=</span> <span class="fl">2.0</span> <span class="op">*</span> x<span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    <span class="cf">return</span> arma<span class="op">::</span>dot<span class="op">(</span>x<span class="op">,</span> x<span class="op">);</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">// [[Rcpp::export]]</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>Rcpp<span class="op">::</span>List minimize_sphere<span class="op">(</span>arma<span class="op">::</span>vec x0<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>    optim<span class="op">::</span><span class="dt">algo_settings_t</span> settings<span class="op">;</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>    <span class="dt">bool</span> ok <span class="op">=</span> optim<span class="op">::</span>bfgs<span class="op">(</span>x0<span class="op">,</span> sphere_fn<span class="op">,</span> <span class="kw">nullptr</span><span class="op">,</span> settings<span class="op">);</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>    <span class="cf">return</span> Rcpp<span class="op">::</span>List<span class="op">::</span>create<span class="op">(</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>        Rcpp<span class="op">::</span>Named<span class="op">(</span><span class="st">"par"</span><span class="op">)</span> <span class="op">=</span> Rcpp<span class="op">::</span>NumericVector<span class="op">(</span>x0<span class="op">.</span>begin<span class="op">(),</span> x0<span class="op">.</span>end<span class="op">()),</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>        Rcpp<span class="op">::</span>Named<span class="op">(</span><span class="st">"value"</span><span class="op">)</span> <span class="op">=</span> settings<span class="op">.</span>opt_fn_value<span class="op">,</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>        Rcpp<span class="op">::</span>Named<span class="op">(</span><span class="st">"success"</span><span class="op">)</span> <span class="op">=</span> ok<span class="op">);</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>The <code><a href="../reference/optim_sphere_bfgs.html">optim_sphere_bfgs()</a></code> and
 <code><a href="../reference/optim_ackley_de.html">optim_ackley_de()</a></code> exports in this package are compiled
 examples of exactly this pattern — see <code>src/examples.cpp</code>.
 Differential evolution on the multimodal Ackley function, with box
 bounds and a reproducible seed:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/optim_ackley_de.html">optim_ackley_de</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span>, seed <span class="op">=</span> <span class="fl">42L</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $par</span></span>
 <span><span class="co">#&gt; [1]  0.000000e+00 -2.775558e-16</span></span>

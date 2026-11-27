@@ -1,9 +1,9 @@
-# Minimize an R function with BFGS via callbacks
+# Minimize an R function with BFGS
 
-The objective and gradient are plain R functions, called from C++ on
-every evaluation. Convenient, but the callback overhead makes this
-slower than a C++ objective; for performance-critical work write the
-objective in C++ against the OptimLib headers (see the vignette).
+Shortcut for `optimlib(x0, fn, gr, method = "bfgs")`, kept for
+compatibility with version 0.0.1. Use
+[`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
+for other methods, bounds and control settings.
 
 ## Usage
 
@@ -27,7 +27,8 @@ optimlib_bfgs(fn, gr, x0)
 
 ## Value
 
-A list with elements `par`, `value`, `iterations` and `success`.
+See
+[`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md).
 
 ## Examples
 
@@ -43,10 +44,16 @@ optimlib_bfgs(rosenbrock, rosenbrock_gr, c(-1.2, 1))
 #> $value
 #> [1] 2.233623e-18
 #> 
+#> $success
+#> [1] TRUE
+#> 
 #> $iterations
 #> [1] 31
 #> 
-#> $success
-#> [1] TRUE
+#> $error
+#> [1] 4.734761e-09
+#> 
+#> $method
+#> [1] "bfgs"
 #> 
 ```

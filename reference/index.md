@@ -9,12 +9,24 @@
 
 ## Optimizing R functions
 
-Wrappers that minimize plain R functions via callbacks into OptimLib.
+Minimize, constrain or solve plain R functions with any OptimLib
+algorithm.
+
+- [`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
+  : Minimize an R function with OptimLib
+- [`optimlib_sumt()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_sumt.md)
+  : Minimize an R function subject to nonlinear inequality constraints
+- [`optimlib_root()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_root.md)
+  : Solve a system of nonlinear equations
+- [`optimlib_control()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_control.md)
+  : Control settings for OptimLib algorithms
+
+## Shortcuts
 
 - [`optimlib_bfgs()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_bfgs.md)
-  : Minimize an R function with BFGS via callbacks
+  : Minimize an R function with BFGS
 - [`optimlib_nm()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_nm.md)
-  : Minimize an R function with Nelder-Mead via callbacks
+  : Minimize an R function with Nelder-Mead
 
 ## C++ objective demonstrations
 

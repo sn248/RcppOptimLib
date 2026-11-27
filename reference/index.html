@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RcppOptimLib</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Introduction-to-RcppOptimLib.html">Introduction to RcppOptimLib</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sn248/RcppOptimLib/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -53,7 +54,44 @@
       </dl></div><div class="section level2">
       <h2 id="optimizing-r-functions">Optimizing R functions<a class="anchor" aria-label="anchor" href="#optimizing-r-functions"></a></h2>
 
-      <div class="section-desc"><p>Wrappers that minimize plain R functions via callbacks into OptimLib.</p></div>
+      <div class="section-desc"><p>Minimize, constrain or solve plain R functions with any OptimLib algorithm.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="optimlib.html">optimlib()</a></code>
+
+        </dt>
+        <dd>Minimize an R function with OptimLib</dd>
+
+        <dt>
+
+          <code><a href="optimlib_sumt.html">optimlib_sumt()</a></code>
+
+        </dt>
+        <dd>Minimize an R function subject to nonlinear inequality constraints</dd>
+
+        <dt>
+
+          <code><a href="optimlib_root.html">optimlib_root()</a></code>
+
+        </dt>
+        <dd>Solve a system of nonlinear equations</dd>
+
+        <dt>
+
+          <code><a href="optimlib_control.html">optimlib_control()</a></code>
+
+        </dt>
+        <dd>Control settings for OptimLib algorithms</dd>
+      </dl></div><div class="section level2">
+      <h2 id="shortcuts">Shortcuts<a class="anchor" aria-label="anchor" href="#shortcuts"></a></h2>
+
+
 
       <dl></dl></div><div class="section level2">
 
@@ -65,14 +103,14 @@
           <code><a href="optimlib_bfgs.html">optimlib_bfgs()</a></code>
 
         </dt>
-        <dd>Minimize an R function with BFGS via callbacks</dd>
+        <dd>Minimize an R function with BFGS</dd>
 
         <dt>
 
           <code><a href="optimlib_nm.html">optimlib_nm()</a></code>
 
         </dt>
-        <dd>Minimize an R function with Nelder-Mead via callbacks</dd>
+        <dd>Minimize an R function with Nelder-Mead</dd>
       </dl></div><div class="section level2">
       <h2 id="c-objective-demonstrations">C++ objective demonstrations<a class="anchor" aria-label="anchor" href="#c-objective-demonstrations"></a></h2>
 

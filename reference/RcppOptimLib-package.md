@@ -19,13 +19,18 @@ There are two ways to use the package:
     `sourceCpp()` file), then `#include <RcppOptimLib.h>` and call the
     `optim::` routines directly on Armadillo vectors.
 
-2.  **From R:** call the demonstration wrappers such as
-    [`optim_sphere_bfgs()`](https://sn248.github.io/RcppOptimLib/reference/optim_sphere_bfgs.md),
-    [`optim_ackley_de()`](https://sn248.github.io/RcppOptimLib/reference/optim_ackley_de.md),
-    [`optimlib_bfgs()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_bfgs.md)
+2.  **From R:**
+    [`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
+    minimizes plain R functions with any OptimLib algorithm,
+    [`optimlib_sumt()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_sumt.md)
+    adds nonlinear inequality constraints and
+    [`optimlib_root()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_root.md)
+    solves systems of equations; tune them with
+    [`optimlib_control()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_control.md).
+    [`optim_sphere_bfgs()`](https://sn248.github.io/RcppOptimLib/reference/optim_sphere_bfgs.md)
     and
-    [`optimlib_nm()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_nm.md).
-    The latter two accept plain R functions as objectives via callbacks.
+    [`optim_ackley_de()`](https://sn248.github.io/RcppOptimLib/reference/optim_ackley_de.md)
+    demonstrate objectives written in C++.
 
 ## See also
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RcppOptimLib</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/Introduction-to-RcppOptimLib.html">Introduction to RcppOptimLib</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sn248/RcppOptimLib/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -51,7 +52,16 @@
 <p><strong>Two patches to the vendored code</strong>:</p>
 <ul><li>Index-vector typedefs (marked <code>[RcppOptimLib patch]</code> in <code>misc/optim_options.hpp</code>): <code>ColVecUInt_t</code>/<code>RowVecUInt_t</code> changed from <code>arma::Col&lt;unsigned long long&gt;</code> to <code>arma::Col&lt;arma::uword&gt;</code>. On LP64 Linux <code>arma::uword</code> is <code>unsigned long</code>, a distinct type from <code>unsigned long long</code>, and Armadillo ≥ 12 index-vector overloads (<code>X.rows(uvec)</code>, <code>X(uvec)</code>) reject the upstream type. Worth offering upstream as a PR.</li>
 <li>Console output: <code>std::cout</code>/<code>std::cerr</code>/<code>printf</code> replaced mechanically (sed) with <code>Rcpp::Rcout</code>/<code>Rcpp::Rcerr</code>/<code>Rprintf</code> across the headers — CRAN forbids compiled code writing to stdout/stderr, and <code>R CMD check</code> flags the symbols even when the print paths are disabled at runtime. Also pruned: <code>BaseMatrixOps/.git</code>, <code>.github/</code> and <code>tests/</code> (hidden-file NOTE and a GNU-Makefile WARNING in check).</li>
+<li>Upstream bug fixes (0.0.2; each marked <code>RcppOptimLib patch</code> in the source, all present on upstream master as of 2026-11 and worth reporting/PRing):
+<ul><li>
+<code>unconstrained/lbfgs.hpp</code>: <code>x</code> was not advanced to <code>x_p</code> after the first line search, so the first in-loop curvature pair used an <code>s</code> spanning two steps against a one-step <code>y</code>; L-BFGS stalled after 2 iterations on Rosenbrock. The first-step <code>grad_err</code> also used the initial gradient instead of <code>grad_p</code>.</li>
+<li>
+<code>unconstrained/pso_dv.hpp</code>: the stagnation-reset Hadamard product mixed a column vector (<code>rand_vec</code>) with a row vector (<code>P_max - P_min</code>); Armadillo throws at runtime.</li>
+<li>
+<code>constrained/sumt.hpp</code>: penalty gradient was <code>c * colSums(J)</code> instead of <code>c * t(J) %*% g</code>, inconsistent with the penalized objective; BFGS stalled once the penalty grew (x + y &lt;= 2 test stopped at 1.00046 instead of 1).</li>
 </ul></li>
+</ul><p>Known upstream behaviours <em>not</em> patched, handled on the R side: <code>de_prmm</code> halves the population three times (hard-coded) and indexes with unsigned arithmetic, so <code>n_pop %/% 8 &lt;= n_pop_best</code> reads out of bounds — <code><a href="reference/optimlib.html">optimlib()</a></code> validates this. With <code>check_freq = Inf</code>, <code>de</code> reports success after <code>n_gen</code> generations but <code>de_prmm</code>/<code>pso</code>/<code>pso_dv</code> report failure — documented in <code><a href="reference/optimlib.html">?optimlib</a></code>.</p>
+</li>
 <li><p><strong>Licensing.</strong> The package is GPL (&gt;= 3) (Apache-2.0 is compatible with GPL-3 but not GPL-2); the bundled OptimLib and BaseMatrixOps headers are Apache-2.0, Copyright Keith O’Hara, who is listed in <code>Authors@R</code> as <code>aut, cph</code>. See <code>inst/COPYRIGHTS</code>, <code>inst/include/optimlib-LICENSE</code> and <code>inst/include/optimlib-NOTICE.txt</code>.</p></li>
 </ol></div>
 <div class="section level2">
@@ -81,9 +91,9 @@
 </ul></div>
 <div class="section level2">
 <h2 id="phase-2--a-real-r-level-interface">Phase 2 — a real R-level interface<a class="anchor" aria-label="anchor" href="#phase-2--a-real-r-level-interface"></a></h2>
-<p>Goal: one <code>optimlib()</code> front end resembling <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim()</a></code>:</p>
+<p>Goal: one <code><a href="reference/optimlib.html">optimlib()</a></code> front end resembling <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim()</a></code>:</p>
 <ul class="task-list"><li><label><input type="checkbox"><code>optimlib(par, fn, gr = NULL, method = c("bfgs","lbfgs","cg","gd",     "nm","de","pso"), lower = NULL, upper = NULL, control = list())</code></label></li>
-<li><label><input type="checkbox">Map <code>control</code> onto <code>optim::algo_settings_t</code> (iter_max, grad_err_tol, rel_sol_change_tol, per-algorithm sub-settings such as <code>de_settings.n_pop</code>); document defaults in <code>?optimlib</code></label></li>
+<li><label><input type="checkbox">Map <code>control</code> onto <code>optim::algo_settings_t</code> (iter_max, grad_err_tol, rel_sol_change_tol, per-algorithm sub-settings such as <code>de_settings.n_pop</code>); document defaults in <code><a href="reference/optimlib.html">?optimlib</a></code></label></li>
 <li><label><input type="checkbox">When <code>gr</code> is NULL for gradient-based methods, fall back to OptimLib’s numerical gradient or refuse with a clear error — decide and document</label></li>
 <li><label><input type="checkbox">RNG: always route a user-suppliable seed into <code>settings.rng_seed_value</code> (OptimLib uses its own <code>std::mt19937_64</code>, not R’s RNG stream); consider seeding from R’s RNG via <code>R::runif()</code> so <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> affects results</label></li>
 <li><label><input type="checkbox">Wrap R callback exceptions: an R error inside <code>fn</code> must not longjmp through C++ frames — catch with <code>Rcpp::Function</code> semantics and return a proper error (add a test that <code>fn = stop("boom")</code> fails cleanly)</label></li>
@@ -92,7 +102,7 @@
 <div class="section level2">
 <h2 id="phase-3--client-package-story-and-docs">Phase 3 — client-package story and docs<a class="anchor" aria-label="anchor" href="#phase-3--client-package-story-and-docs"></a></h2>
 <ul class="task-list"><li><label><input type="checkbox">Vignette 1: using OptimLib from <code>sourceCpp()</code>/own package via LinkingTo (the fast path), including passing data through <code>opt_data</code> and a benchmark against the R-callback path</label></li>
-<li><label><input type="checkbox">Vignette 2: the R-level <code>optimlib()</code> interface, comparison with <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim()</a></code> and <code>optimx</code> on standard test problems</label></li>
+<li><label><input type="checkbox">Vignette 2: the R-level <code><a href="reference/optimlib.html">optimlib()</a></code> interface, comparison with <code><a href="https://rdrr.io/r/stats/optim.html" class="external-link">stats::optim()</a></code> and <code>optimx</code> on standard test problems</label></li>
 <li><label><input type="checkbox">pkgdown site (mirror the Rcppautodiff <code>_pkgdown.yml</code> setup)</label></li>
 <li><label><input type="checkbox">GitHub Actions: R-CMD-check matrix (Linux/macOS/Windows, release/devel) — Windows is the one to watch (below)</label></li>
 </ul></div>

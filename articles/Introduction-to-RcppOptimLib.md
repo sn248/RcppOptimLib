@@ -7,44 +7,79 @@ use it.
 
 ## 1. From R, via callbacks
 
-The demonstration wrappers accept plain R functions. BFGS on the
-Rosenbrock function, with an analytic gradient:
+[`optimlib()`](https://sn248.github.io/RcppOptimLib/reference/optimlib.md)
+minimizes a plain R function with any OptimLib algorithm, with an
+interface modelled on [`optim()`](https://rdrr.io/r/stats/optim.html).
+BFGS on the Rosenbrock function, with an analytic gradient:
 
 ``` r
 
 rosenbrock    <- function(x) 100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
 rosenbrock_gr <- function(x) c(-400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
                                 200 * (x[2] - x[1]^2))
-optimlib_bfgs(rosenbrock, rosenbrock_gr, c(-1.2, 1))
+optimlib(c(-1.2, 1), rosenbrock, rosenbrock_gr)
 #> $par
 #> [1] 1 1
 #> 
 #> $value
 #> [1] 2.233623e-18
 #> 
+#> $success
+#> [1] TRUE
+#> 
 #> $iterations
 #> [1] 31
 #> 
-#> $success
-#> [1] TRUE
+#> $error
+#> [1] 4.734761e-09
+#> 
+#> $method
+#> [1] "bfgs"
 ```
 
-Derivative-free Nelder–Mead needs no gradient:
+Choose the algorithm with `method`. Gradient-based methods fall back to
+finite differences when `gr` is omitted; Nelder–Mead, differential
+evolution and particle swarm need no gradient at all:
 
 ``` r
 
-optimlib_nm(function(x) sum((x - 3)^2), c(0, 0))
-#> $par
-#> [1] 3 3
-#> 
-#> $value
-#> [1] 2.481919e-15
-#> 
-#> $iterations
-#> [1] 66
-#> 
-#> $success
-#> [1] TRUE
+sapply(c("lbfgs", "cg", "nm"), function(m) {
+  optimlib(c(-1.2, 1), rosenbrock, method = m)$par
+})
+#>      lbfgs cg nm
+#> [1,]     1  1  1
+#> [2,]     1  1  1
+```
+
+Bounds are given with `lower` and `upper`. The population methods use
+R’s random number generator for their seed, so
+[`set.seed()`](https://rdrr.io/r/base/Random.html) makes them
+reproducible:
+
+``` r
+
+set.seed(3016)
+optimlib(c(2, 2), rosenbrock, method = "de", lower = -5, upper = 5,
+         control = list(de = list(n_gen = 300)))$par
+#> [1] 1 1
+```
+
+`control` takes general settings (`iter_max`, tolerances, `print_level`)
+and per-algorithm lists such as `lbfgs = list(par_M = 20)` or
+`gd = list(method = "adam")`; see
+[`?optimlib_control`](https://sn248.github.io/RcppOptimLib/reference/optimlib_control.md).
+Nonlinear inequality constraints `g(x) <= 0` are handled by
+[`optimlib_sumt()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_sumt.md),
+and systems of equations by
+[`optimlib_root()`](https://sn248.github.io/RcppOptimLib/reference/optimlib_root.md):
+
+``` r
+
+optimlib_sumt(c(0, 0), function(x) sum((x - 2)^2),
+              constr = function(x) sum(x^2) - 1)$par
+#> [1] 0.7071068 0.7071068
+optimlib_root(c(1.2, 1.3), function(x) c(sum(x^2) - 4, x[1] - x[2]))$par
+#> [1] 1.414214 1.414214
 ```
 
 Every objective evaluation crosses the R/C++ boundary, so for
