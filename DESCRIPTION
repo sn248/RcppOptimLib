@@ -10,7 +10,7 @@ Authors@R: c(person(given = "Satyaprakash", family = "Nayak",
                     role = c("aut", "cph"),
                     comment = "Author of the OptimLib C++ library"))
 Maintainer: Satyaprakash Nayak <satyaprakash.nayak@gmail.com>
-URL: https://github.com/sn248/RcppOptimLib
+URL: https://github.com/sn248/RcppOptimLib, https://sn248.github.io/RcppOptimLib/
 BugReports: https://github.com/sn248/RcppOptimLib/issues
 Description: Provides an interface from R to 'OptimLib'
     <https://optimlib.readthedocs.io/>, a lightweight header-only C++

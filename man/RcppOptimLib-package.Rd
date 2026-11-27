@@ -33,6 +33,7 @@ objectives via callbacks.
 Useful links:
 \itemize{
   \item \url{https://github.com/sn248/RcppOptimLib}
+  \item \url{https://sn248.github.io/RcppOptimLib/}
   \item Report bugs at \url{https://github.com/sn248/RcppOptimLib/issues}
 }
 

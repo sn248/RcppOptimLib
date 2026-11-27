@@ -1,0 +1,27 @@
+url: https://sn248.github.io/RcppOptimLib/
+template:
+  bootstrap: 5
+
+reference:
+- title: Package overview
+  contents:
+  - RcppOptimLib-package
+- title: Optimizing R functions
+  desc: >
+    Wrappers that minimize plain R functions via callbacks into OptimLib.
+  contents:
+  - optimlib_bfgs
+  - optimlib_nm
+- title: C++ objective demonstrations
+  desc: >
+    Objectives written entirely in C++; the model for packages using
+    `LinkingTo: RcppOptimLib`.
+  contents:
+  - optim_sphere_bfgs
+  - optim_ackley_de
+
+articles:
+- title: Getting started
+  navbar: ~
+  contents:
+  - Introduction-to-RcppOptimLib
