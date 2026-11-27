@@ -17,7 +17,9 @@ particle swarm, and root finding) from C++ code via 'Rcpp' and
 \details{
 There are two ways to use the package:
 \enumerate{
-\item \strong{From C++ (recommended):} add \verb{LinkingTo: RcppOptimLib, Rcpp, RcppArmadillo} to your package's DESCRIPTION (or
+\item \strong{From C++ (recommended):} add \verb{LinkingTo: RcppOptimLib, Rcpp, RcppArmadillo} to your package's DESCRIPTION and
+\verb{PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)} to its
+\code{src/Makevars} (or use
 \verb{// [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]} in a
 \code{sourceCpp()} file), then \verb{#include <RcppOptimLib.h>} and call the
 \verb{optim::} routines directly on Armadillo vectors.

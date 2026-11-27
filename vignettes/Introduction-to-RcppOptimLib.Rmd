@@ -41,8 +41,11 @@ performance-critical work write the objective in C++ (below).
 
 ## 2. From C++, via LinkingTo
 
-Add `LinkingTo: RcppOptimLib, Rcpp, RcppArmadillo` to your package, or
-compile a standalone file with `Rcpp::sourceCpp()`:
+Add `LinkingTo: RcppOptimLib, Rcpp, RcppArmadillo` to your package and
+`PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)` to its `src/Makevars`
+(Armadillo needs BLAS/LAPACK; the link fails on Windows without it), or
+compile a standalone file with `Rcpp::sourceCpp()`, where the
+`RcppArmadillo` plugin adds these libraries for you:
 
 ```{Rcpp, eval = FALSE}
 // [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]

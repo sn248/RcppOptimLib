@@ -7,3 +7,7 @@ CXX_STD = CXX17
 ## policy defines live in inst/include/RcppOptimLib.h, not here, so that
 ## client packages inherit them automatically.
 PKG_CPPFLAGS = -I../inst/include/
+
+## Armadillo calls BLAS/LAPACK. On Linux/macOS libR usually provides these
+## symbols, masking a missing link line; on Windows the link fails without it.
+PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)

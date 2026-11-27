@@ -11,7 +11,9 @@
 #' There are two ways to use the package:
 #'
 #' 1. **From C++ (recommended):** add `LinkingTo: RcppOptimLib, Rcpp,
-#'    RcppArmadillo` to your package's DESCRIPTION (or
+#'    RcppArmadillo` to your package's DESCRIPTION and
+#'    `PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)` to its
+#'    `src/Makevars` (or use
 #'    `// [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]` in a
 #'    `sourceCpp()` file), then `#include <RcppOptimLib.h>` and call the
 #'    `optim::` routines directly on Armadillo vectors.

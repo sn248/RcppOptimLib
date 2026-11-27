@@ -14,7 +14,14 @@ so other R packages can use them by adding
 LinkingTo: RcppOptimLib, Rcpp, RcppArmadillo
 ```
 
-to their `DESCRIPTION`, or from a standalone C++ file:
+to their `DESCRIPTION` and linking BLAS/LAPACK in `src/Makevars` (required
+on Windows):
+
+```
+PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+```
+
+or from a standalone C++ file:
 
 ```cpp
 // [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]

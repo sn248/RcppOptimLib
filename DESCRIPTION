@@ -36,4 +36,4 @@ Imports: Rcpp (>= 1.0.8.3)
 LinkingTo: Rcpp, RcppArmadillo
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1
