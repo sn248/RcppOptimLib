@@ -35,28 +35,53 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// optimlib_bfgs
-Rcpp::List optimlib_bfgs(Rcpp::Function fn, Rcpp::Function gr, arma::vec x0);
-RcppExport SEXP _RcppOptimLib_optimlib_bfgs(SEXP fnSEXP, SEXP grSEXP, SEXP x0SEXP) {
+// optimlib_min_cpp
+Rcpp::List optimlib_min_cpp(const std::string& method, arma::vec par, Rcpp::Function fn, SEXP gr, SEXP hess, const arma::vec& lower, const arma::vec& upper, const Rcpp::List& control);
+RcppExport SEXP _RcppOptimLib_optimlib_min_cpp(SEXP methodSEXP, SEXP parSEXP, SEXP fnSEXP, SEXP grSEXP, SEXP hessSEXP, SEXP lowerSEXP, SEXP upperSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type par(parSEXP);
     Rcpp::traits::input_parameter< Rcpp::Function >::type fn(fnSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Function >::type gr(grSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type x0(x0SEXP);
-    rcpp_result_gen = Rcpp::wrap(optimlib_bfgs(fn, gr, x0));
+    Rcpp::traits::input_parameter< SEXP >::type gr(grSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type hess(hessSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type upper(upperSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(optimlib_min_cpp(method, par, fn, gr, hess, lower, upper, control));
     return rcpp_result_gen;
 END_RCPP
 }
-// optimlib_nm
-Rcpp::List optimlib_nm(Rcpp::Function fn, arma::vec x0);
-RcppExport SEXP _RcppOptimLib_optimlib_nm(SEXP fnSEXP, SEXP x0SEXP) {
+// optimlib_sumt_cpp
+Rcpp::List optimlib_sumt_cpp(arma::vec par, Rcpp::Function fn, Rcpp::Function gr, Rcpp::Function constr, Rcpp::Function constr_jac, const int n_constr, const Rcpp::List& control);
+RcppExport SEXP _RcppOptimLib_optimlib_sumt_cpp(SEXP parSEXP, SEXP fnSEXP, SEXP grSEXP, SEXP constrSEXP, SEXP constr_jacSEXP, SEXP n_constrSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type par(parSEXP);
     Rcpp::traits::input_parameter< Rcpp::Function >::type fn(fnSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type x0(x0SEXP);
-    rcpp_result_gen = Rcpp::wrap(optimlib_nm(fn, x0));
+    Rcpp::traits::input_parameter< Rcpp::Function >::type gr(grSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type constr(constrSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type constr_jac(constr_jacSEXP);
+    Rcpp::traits::input_parameter< const int >::type n_constr(n_constrSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(optimlib_sumt_cpp(par, fn, gr, constr, constr_jac, n_constr, control));
+    return rcpp_result_gen;
+END_RCPP
+}
+// optimlib_root_cpp
+Rcpp::List optimlib_root_cpp(const std::string& method, arma::vec par, Rcpp::Function fn, SEXP jac, const Rcpp::List& control);
+RcppExport SEXP _RcppOptimLib_optimlib_root_cpp(SEXP methodSEXP, SEXP parSEXP, SEXP fnSEXP, SEXP jacSEXP, SEXP controlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type par(parSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Function >::type fn(fnSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type jac(jacSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(optimlib_root_cpp(method, par, fn, jac, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -64,8 +89,9 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_RcppOptimLib_optim_sphere_bfgs", (DL_FUNC) &_RcppOptimLib_optim_sphere_bfgs, 1},
     {"_RcppOptimLib_optim_ackley_de", (DL_FUNC) &_RcppOptimLib_optim_ackley_de, 2},
-    {"_RcppOptimLib_optimlib_bfgs", (DL_FUNC) &_RcppOptimLib_optimlib_bfgs, 3},
-    {"_RcppOptimLib_optimlib_nm", (DL_FUNC) &_RcppOptimLib_optimlib_nm, 2},
+    {"_RcppOptimLib_optimlib_min_cpp", (DL_FUNC) &_RcppOptimLib_optimlib_min_cpp, 8},
+    {"_RcppOptimLib_optimlib_sumt_cpp", (DL_FUNC) &_RcppOptimLib_optimlib_sumt_cpp, 7},
+    {"_RcppOptimLib_optimlib_root_cpp", (DL_FUNC) &_RcppOptimLib_optimlib_root_cpp, 5},
     {NULL, NULL, 0}
 };
 

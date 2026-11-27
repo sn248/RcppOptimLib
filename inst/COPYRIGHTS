@@ -1,10 +1,11 @@
 RcppOptimLib bundles the header-only version (generated upstream via
 ./configure --header-only-version) of the following libraries in
-inst/include/, with two mechanical modifications required for use
-inside R (documented in IMPLEMENTATION.md in the source repository):
-index-vector typedefs changed to arma::uword, and console output
-(std::cout / printf) routed through Rcpp::Rcout / Rprintf per CRAN
-policy:
+inst/include/, with modifications documented in IMPLEMENTATION.md in
+the source repository: index-vector typedefs changed to arma::uword;
+console output (std::cout / printf) routed through Rcpp::Rcout /
+Rprintf per CRAN policy; and bug fixes in unconstrained/lbfgs.hpp,
+unconstrained/pso_dv.hpp and constrained/sumt.hpp (each marked
+"RcppOptimLib patch" in the source). The libraries are:
 
   - OptimLib      (https://github.com/kthohr/optim)
   - BaseMatrixOps (https://github.com/kthohr/BaseMatrixOps),

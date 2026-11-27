@@ -1,10 +1,8 @@
 // Demonstration functions for RcppOptimLib.
 //
-// Two kinds of use are shown:
-//   1. Pure C++ objectives (optim_sphere_bfgs, optim_ackley_de) — the fast
-//      path, and the model for client packages using LinkingTo.
-//   2. R-function callbacks (optimlib_bfgs, optimlib_nm) — convenient but
-//      each objective evaluation crosses the R/C++ boundary.
+// Pure C++ objectives (optim_sphere_bfgs, optim_ackley_de): the fast path,
+// and the model for client packages using LinkingTo. The general R-callback
+// interface (optimlib() and friends) lives in interface.cpp.
 
 #include <RcppOptimLib.h>
 
@@ -83,63 +81,5 @@ Rcpp::List optim_ackley_de(arma::vec x0, int seed = 1)
     settings.lower_bounds = arma::vec(x0.n_elem, arma::fill::value(-5.0));
     settings.upper_bounds = arma::vec(x0.n_elem, arma::fill::value(5.0));
     const bool success = optim::de(x0, ackley_fn, nullptr, settings);
-    return result_list(success, x0, settings);
-}
-
-//' Minimize an R function with BFGS via callbacks
-//'
-//' The objective and gradient are plain R functions, called from C++ on
-//' every evaluation. Convenient, but the callback overhead makes this
-//' slower than a C++ objective; for performance-critical work write the
-//' objective in C++ against the OptimLib headers (see the vignette).
-//'
-//' @param fn R function taking a numeric vector, returning a scalar.
-//' @param gr R function taking a numeric vector, returning the gradient
-//'   vector.
-//' @param x0 Numeric vector of starting values.
-//' @return A list with elements `par`, `value`, `iterations` and `success`.
-//' @examples
-//' rosenbrock <- function(x) 100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
-//' rosenbrock_gr <- function(x) c(
-//'   -400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
-//'    200 * (x[2] - x[1]^2))
-//' optimlib_bfgs(rosenbrock, rosenbrock_gr, c(-1.2, 1))
-//' @export
-// [[Rcpp::export]]
-Rcpp::List optimlib_bfgs(Rcpp::Function fn, Rcpp::Function gr, arma::vec x0)
-{
-    auto objfn = [&fn, &gr](const arma::vec& x, arma::vec* grad_out,
-                            void*) -> double {
-        if (grad_out) {
-            *grad_out = Rcpp::as<arma::vec>(gr(x));
-        }
-        return Rcpp::as<double>(fn(x));
-    };
-
-    optim::algo_settings_t settings;
-    const bool success = optim::bfgs(x0, objfn, nullptr, settings);
-    return result_list(success, x0, settings);
-}
-
-//' Minimize an R function with Nelder-Mead via callbacks
-//'
-//' Derivative-free minimization of a plain R function, so no gradient
-//' function is needed. Same callback-overhead caveat as [optimlib_bfgs()].
-//'
-//' @param fn R function taking a numeric vector, returning a scalar.
-//' @param x0 Numeric vector of starting values.
-//' @return A list with elements `par`, `value`, `iterations` and `success`.
-//' @examples
-//' optimlib_nm(function(x) sum((x - 3)^2), c(0, 0))
-//' @export
-// [[Rcpp::export]]
-Rcpp::List optimlib_nm(Rcpp::Function fn, arma::vec x0)
-{
-    auto objfn = [&fn](const arma::vec& x, arma::vec*, void*) -> double {
-        return Rcpp::as<double>(fn(x));
-    };
-
-    optim::algo_settings_t settings;
-    const bool success = optim::nm(x0, objfn, nullptr, settings);
     return result_list(success, x0, settings);
 }

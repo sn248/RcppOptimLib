@@ -1,7 +1,7 @@
 Package: RcppOptimLib
 Type: Package
 Title: An Interface to the C++ Numerical Optimization Library 'OptimLib'
-Version: 0.0.1
+Version: 0.0.1.9000
 Date: 2026-11-27
 Authors@R: c(person(given = "Satyaprakash", family = "Nayak",
                     role = c("aut", "cre"), email = "satyaprakash.nayak@gmail.com",
@@ -20,9 +20,10 @@ Description: Provides an interface from R to 'OptimLib'
     built on the 'Armadillo' linear algebra library. The 'OptimLib' header
     files (generated in header-only mode) are shipped with this package so
     that other R packages can use them by including 'RcppOptimLib' in the
-    'LinkingTo' field of their 'DESCRIPTION' file. Example programs
-    demonstrate minimizing C++ objective functions as well as plain R
-    functions via callbacks, using 'Rcpp' and 'RcppArmadillo'.
+    'LinkingTo' field of their 'DESCRIPTION' file. All algorithms,
+    including constrained optimization and root finding, can also be
+    called directly from R on plain R functions through an
+    'optim()'-like interface with a validated control list.
 License: GPL (>= 3)
 Copyright: See the file COPYRIGHTS in the inst directory: the bundled
     'OptimLib' and 'BaseMatrixOps' headers are copyright Keith O'Hara,

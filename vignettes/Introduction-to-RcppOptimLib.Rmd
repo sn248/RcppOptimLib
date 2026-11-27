@@ -20,20 +20,47 @@ use it.
 
 ## 1. From R, via callbacks
 
-The demonstration wrappers accept plain R functions. BFGS on the
-Rosenbrock function, with an analytic gradient:
+`optimlib()` minimizes a plain R function with any OptimLib algorithm,
+with an interface modelled on `optim()`. BFGS on the Rosenbrock function,
+with an analytic gradient:
 
 ```{r}
 rosenbrock    <- function(x) 100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
 rosenbrock_gr <- function(x) c(-400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
                                 200 * (x[2] - x[1]^2))
-optimlib_bfgs(rosenbrock, rosenbrock_gr, c(-1.2, 1))
+optimlib(c(-1.2, 1), rosenbrock, rosenbrock_gr)
 ```
 
-Derivative-free Nelder–Mead needs no gradient:
+Choose the algorithm with `method`. Gradient-based methods fall back to
+finite differences when `gr` is omitted; Nelder–Mead, differential
+evolution and particle swarm need no gradient at all:
 
 ```{r}
-optimlib_nm(function(x) sum((x - 3)^2), c(0, 0))
+sapply(c("lbfgs", "cg", "nm"), function(m) {
+  optimlib(c(-1.2, 1), rosenbrock, method = m)$par
+})
+```
+
+Bounds are given with `lower` and `upper`. The population methods use
+R's random number generator for their seed, so `set.seed()` makes them
+reproducible:
+
+```{r}
+set.seed(3016)
+optimlib(c(2, 2), rosenbrock, method = "de", lower = -5, upper = 5,
+         control = list(de = list(n_gen = 300)))$par
+```
+
+`control` takes general settings (`iter_max`, tolerances, `print_level`)
+and per-algorithm lists such as `lbfgs = list(par_M = 20)` or
+`gd = list(method = "adam")`; see `?optimlib_control`. Nonlinear
+inequality constraints `g(x) <= 0` are handled by `optimlib_sumt()`, and
+systems of equations by `optimlib_root()`:
+
+```{r}
+optimlib_sumt(c(0, 0), function(x) sum((x - 2)^2),
+              constr = function(x) sum(x^2) - 1)$par
+optimlib_root(c(1.2, 1.3), function(x) c(sum(x^2) - 4, x[1] - x[2]))$par
 ```
 
 Every objective evaluation crosses the R/C++ boundary, so for

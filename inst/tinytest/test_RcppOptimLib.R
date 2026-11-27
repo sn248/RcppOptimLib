@@ -15,9 +15,12 @@ expect_identical(res$par, res2$par)
 
 # R-callback BFGS on the Rosenbrock function: minimum at (1, 1).
 rosenbrock <- function(x) 100 * (x[2] - x[1]^2)^2 + (1 - x[1])^2
-rosenbrock_gr <- function(x) c(
-  -400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
-   200 * (x[2] - x[1]^2))
+rosenbrock_gr <- function(x) {
+  c(
+    -400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
+    200 * (x[2] - x[1]^2)
+  )
+}
 res <- optimlib_bfgs(rosenbrock, rosenbrock_gr, c(-1.2, 1))
 expect_true(res$success)
 expect_equal(res$par, c(1, 1), tolerance = 1e-5)

@@ -235,7 +235,8 @@ internal::lbfgs_impl(
 
     ColVec_t s = x_p - x;
 
-    grad_err = BMO_MATOPS_L2NORM(grad);
+    // RcppOptimLib patch: upstream measured the *initial* gradient here.
+    grad_err = BMO_MATOPS_L2NORM(grad_p);
     fp_t rel_sol_change = BMO_MATOPS_L1NORM( BMO_MATOPS_ARRAY_DIV_ARRAY(s, (BMO_MATOPS_ARRAY_ADD_SCALAR(BMO_MATOPS_ABS(x), OPTIM_FPN_SMALL_NUMBER)) ) );
 
     OPTIM_LBFGS_TRACE(0, grad_err, rel_sol_change, x_p, d, grad_p, s_mat, y_mat);
@@ -257,6 +258,11 @@ internal::lbfgs_impl(
     y_mat.col(0) = y;
 
     grad = grad_p;
+
+    // RcppOptimLib patch: upstream never advanced x after the first step, so
+    // the first in-loop curvature pair used s spanning two steps against y
+    // spanning one, corrupting the L-BFGS recursion (stalls on Rosenbrock).
+    x = x_p;
 
     // begin loop
 

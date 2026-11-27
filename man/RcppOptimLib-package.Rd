@@ -23,10 +23,11 @@ There are two ways to use the package:
 \verb{// [[Rcpp::depends(RcppOptimLib, RcppArmadillo)]]} in a
 \code{sourceCpp()} file), then \verb{#include <RcppOptimLib.h>} and call the
 \verb{optim::} routines directly on Armadillo vectors.
-\item \strong{From R:} call the demonstration wrappers such as
-\code{\link[=optim_sphere_bfgs]{optim_sphere_bfgs()}}, \code{\link[=optim_ackley_de]{optim_ackley_de()}}, \code{\link[=optimlib_bfgs]{optimlib_bfgs()}} and
-\code{\link[=optimlib_nm]{optimlib_nm()}}. The latter two accept plain R functions as
-objectives via callbacks.
+\item \strong{From R:} \code{\link[=optimlib]{optimlib()}} minimizes plain R functions with any
+OptimLib algorithm, \code{\link[=optimlib_sumt]{optimlib_sumt()}} adds nonlinear inequality
+constraints and \code{\link[=optimlib_root]{optimlib_root()}} solves systems of equations; tune
+them with \code{\link[=optimlib_control]{optimlib_control()}}. \code{\link[=optim_sphere_bfgs]{optim_sphere_bfgs()}} and
+\code{\link[=optim_ackley_de]{optim_ackley_de()}} demonstrate objectives written in C++.
 }
 }
 \seealso{
