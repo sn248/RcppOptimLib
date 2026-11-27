@@ -12,25 +12,31 @@ wrappers.
 
 ## Test environments
 
-* local: Ubuntu Linux, R 4.6.1, gcc 13 — 0 errors, 0 warnings, 2 NOTEs
-  (see below)
-* win-builder (devel and release) — PENDING
-* macOS (R-hub / mac-builder) — PENDING
+* local: Ubuntu 26.04, R 4.6.1, g++ 15.2 (`--as-cran`) — 0 errors,
+  0 warnings, 3 NOTEs (see below); also compiled cleanly with
+  `-Wall -pedantic`
+* R-hub (R-devel): Windows x86_64 (ucrt, Rtools45), macOS x86_64,
+  macOS arm64 and Linux clang-asan (AddressSanitizer + UBSan) — Status
+  OK, no compiler warnings, no sanitizer reports
+* win-builder (R-devel, R-release, R-oldrelease) — 0 errors, 0 warnings
+* mac-builder (R-release, arm64) — 0 errors, 0 warnings
 
-(Update this section with the actual win-builder and macOS results before
-submitting.)
+The package checks cleanly on all platforms above.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 NOTEs on CRAN's machines.
+0 errors | 0 warnings | 1 NOTE on CRAN's check services.
 
 * "New submission" — expected for a first submission.
 
-* A local-only NOTE about the non-portable compilation flag
-  `-mno-omit-leaf-frame-pointer` appears on Debian/Ubuntu builds. It
-  originates from R's own default `CXX17FLAGS` on that platform, not from
-  the package (the package's `src/Makevars` sets only `CXX_STD = CXX17`
-  and `PKG_CPPFLAGS`), and does not appear on CRAN's build machines.
+Two further NOTEs appear only locally and are not caused by the package:
+
+* The non-portable compilation flag `-mno-omit-leaf-frame-pointer`,
+  which comes from R's own default `CXX17FLAGS` on Debian/Ubuntu builds
+  (the package's `src/Makevars` sets only `CXX_STD`, `PKG_CPPFLAGS` and
+  the standard `PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)`).
+* HTML manual validation skipped because HTML Tidy is not installed
+  locally.
 
 ## Bundled third-party code
 
@@ -55,5 +61,7 @@ inside R, documented in `IMPLEMENTATION.md`:
 
 Upstream OptimLib historically stated that Windows was unsupported; that
 predates its header-only mode. The bundled headers compile with Rtools'
-gcc in header-only mode. The win-builder results above confirm this
-before submission.
+gcc in header-only mode; the package links R's BLAS/LAPACK via
+`PKG_LIBS`, as for any 'RcppArmadillo' package. The package builds and
+passes all checks on Windows (win-builder R-devel, R-release and
+R-oldrelease; R-hub Windows).
